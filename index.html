@@ -157,7 +157,15 @@
     
     <div id="app">
       <div id="header">
-        <b>Viz.js</b> &mdash; <a href="http://www.graphviz.org">Graphviz</a> in your browser. Read more at <a href="https://github.com/mdaines/viz.js">the GitHub repository</a>.
+        <b>Fair_Flow</b> &mdash; a simple workflow library.
+	<div><h3>Examples</h3>
+		<ul>
+			<div><a onclick="doExample(dg1)">Load Example 1</a></div>
+			<div><a onclickid="doExample(dg2)">Two</a></div>
+			<div><a onclickid="doExample(dg3)">Three</a></div>
+			<div><a onclickid="run()">Run</a></div>
+		</ul>
+	</div>
       </div>
       <div id="panes" class="split split-horizontal">
         <div id="editor" class="split"># http://www.graphviz.org/content/cluster
@@ -233,6 +241,13 @@ digraph G {
     <script src="./bower_components/Split.js/split.min.js"></script>
     <script src="./bower_components/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
     <script>
+
+    function doExample(example){
+        editor.setValue(example);
+    }
+
+    function run(){
+    }
 
     var beforeUnloadMessage = null;
 
@@ -390,6 +405,19 @@ digraph G {
     });
     
     updateGraph();
+    var dg1=`
+
+digraph G {
+
+	
+	start -> a1
+	;
+	a1 -> a2;
+	a2 -> a3;
+	a3 -> end;
+
+}
+`
     
     </script>
     
