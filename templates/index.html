@@ -161,9 +161,9 @@
 	<div><h3>Examples</h3>
 		<ul>
 			<div><a onclick="doExample(dg1)">Load Example 1</a></div>
-			<div><a onclickid="doExample(dg2)">Two</a></div>
-			<div><a onclickid="doExample(dg3)">Three</a></div>
-			<div><a onclickid="run()">Run</a></div>
+			<div><a onclick="doExample(dg2)">Two</a></div>
+			<div><a onclick="doExample(dg3)">Three</a></div>
+			<div><a onclick="doRun()">Run</a></div>
 		</ul>
 	</div>
       </div>
@@ -246,7 +246,8 @@ digraph G {
         editor.setValue(example);
     }
 
-    function run(){
+    function doRun(){
+	    alert("yay");
     }
 
     var beforeUnloadMessage = null;
