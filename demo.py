@@ -1,10 +1,10 @@
+import fair_flow
 from flask import Flask, request, send_from_directory, render_template
-# set the project root directory as the static folder, you can set others.
+import os
 app = Flask(__name__)
 
 
 # Details around storing dot files to disk.
-store=file_dot_data_store()
 
 # Example superclass that implements CRUD.  Reference this class to be able to switch out.
 class dot_data_store():
@@ -47,7 +47,7 @@ class file_dot_data_store(dot_data_store):
         filename = self.filename_from_id(id)
         with open(filename) as f:
             dot=f.read()
-        ps= Process.parse(dot)
+        ps= fair_flow.Process.parse(dot)
         return ps
 
     def delete(self, id):
@@ -59,6 +59,7 @@ class file_dot_data_store(dot_data_store):
         cont=os.listdir(self.store_dir)
         return cont
 
+store=file_dot_data_store()
 
 
 @app.route('/health_check')
@@ -87,7 +88,6 @@ def dot_edit(id=None):
             list=store.list()
             page=jsonify(list)
             return page
-
         file=store.load(id)
         return file.to_dot()
     if request.method == 'POST':
