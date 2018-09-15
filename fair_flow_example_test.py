@@ -50,7 +50,7 @@ def good_dot_src():
 def test_file_store(process):
     name=process.id
     data=process.to_dot()
-    store=demo.file_dot_data_store()
+    store=demo.file_dot_data_store('test_archive')
     # Cleanup from failed old test
     if len(store.list() )!= 0:
         store.delete('Process_Two')
@@ -60,4 +60,4 @@ def test_file_store(process):
     #TODO: implement equals
     assert len(loaded.to_dot()) > 50 and len(process.to_dot()) > 50
     assert len(store.list())>0
- #  assert store.delete(loaded.id)
+    assert store.delete(loaded.id)

@@ -163,7 +163,8 @@
 			<div><a onclick="doExample(dg1)">Load Example 1</a></div>
 			<div><a onclick="doExample(dg2)">Two</a></div>
 			<div><a onclick="doExample(dg3)">Three</a></div>
-			<div><a onclick="doRun()">Run</a></div>
+      <div><a onclick="doRun()">Run</a></div>
+      <div><a onclick="doStep()">Step</a></div>
 		</ul>
 	</div>
       </div>
@@ -246,30 +247,27 @@ digraph G {
         editor.setValue(example);
     }
 
+    function doStep(){
+        sendFlow("step", editor.getValue() );
+    }
 
 
-    function doRun(){
 
-      var url = document.URL;
+    function sendFlow(action, graph){
+
+      var url = document.URL+action;
       var method = "POST";
-      var postData = "Some data";
+      var postData = graph;
       var shouldBeAsync = true;
-
       var request = new XMLHttpRequest();
-
       request.onload = function () {
-
          var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
          var data = request.responseText; // Returned data, e.g., an HTML document.
          alert(data);
+         editor.setValue(data);
       }
-
       request.open(method, url, shouldBeAsync);
-
       request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-      // Or... request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-      // Or... whatever
-
       // Actually sends the request to the server.
       request.send(postData);
 
@@ -433,17 +431,21 @@ digraph G {
     updateGraph();
     var dg1=`
 
-digraph G {
+    digraph one {
+    urgent [ name = "Always_True" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
+    send_text [ name = "Random_True_False" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
+    send_email [ name = "Always_False" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
+    end [ name = "Say" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
+    error [ name = "Say" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
+    urgent -> send_email [label="False"]
+    urgent -> send_text [label="True"]
+    send_text -> end [label="True"]
+    send_email -> end [label="True"]
+    send_text -> error [label="False"]
+    send_email -> error [label="False"]
+    }
 
-
-	start -> a1
-	;
-	a1 -> a2;
-	a2 -> a3;
-	a3 -> end;
-
-}
-`
+    `
 
     </script>
 
