@@ -169,35 +169,7 @@
 	</div>
       </div>
       <div id="panes" class="split split-horizontal">
-        <div id="editor" class="split"># http://www.graphviz.org/content/cluster
-
-digraph G {
-
-	subgraph cluster_0 {
-		style=filled;
-		color=lightgrey;
-		node [style=filled,color=white];
-		a0 -> a1 -> a2 -> a3;
-		label = "process #1";
-	}
-
-	subgraph cluster_1 {
-		node [style=filled];
-		b0 -> b1 -> b2 -> b3;
-		label = "process #2";
-		color=blue
-	}
-	start -> a0;
-	start -> b0;
-	a1 -> b3;
-	b2 -> a3;
-	a3 -> a0;
-	a3 -> end;
-	b3 -> end;
-
-	start [shape=Mdiamond];
-	end [shape=Msquare];
-}
+        <div id="editor" class="split">
 </div>
         <div id="graph" class="split">
           <div id="options">
@@ -243,30 +215,29 @@ digraph G {
     <script src="./static/bower_components/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
     <script>
 
-    function doExample(example){
-        editor.setValue(example);
+    function doExample(graph){
+        editor.setValue(graph);
     }
 
     function doStep(){
         sendFlow("step", editor.getValue() );
     }
 
-
+    function doRun(){
+        sendFlow("run", editor.getValue() );
+    }
 
     function sendFlow(action, graph){
 
       var url = document.URL+action;
-      var method = "POST";
       var postData = graph;
-      var shouldBeAsync = true;
       var request = new XMLHttpRequest();
       request.onload = function () {
          var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
          var data = request.responseText; // Returned data, e.g., an HTML document.
-         alert(data);
          editor.setValue(data);
       }
-      request.open(method, url, shouldBeAsync);
+      request.open("POST", url, true);
       request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       // Actually sends the request to the server.
       request.send(postData);
@@ -429,21 +400,57 @@ digraph G {
     });
 
     updateGraph();
-    var dg1=`
+var dg1=`
 
-    digraph one {
-    urgent [ name = "Always_True" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
-    send_text [ name = "Random_True_False" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
-    send_email [ name = "Always_False" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
-    end [ name = "Say" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
-    error [ name = "Say" state = "WAITING" returned = "Any" fillcolor=WHITE style=filled shape=ellipse]
-    urgent -> send_email [label="False"]
-    urgent -> send_text [label="True"]
-    send_text -> end [label="True"]
-    send_email -> end [label="True"]
-    send_text -> error [label="False"]
-    send_email -> error [label="False"]
-    }
+digraph one {
+  urgent [
+    name = "Always_True"
+    state = "WAITING"
+    returned = "Any"
+    fillcolor=WHITE
+    style=filled
+    shape=ellipse
+  ]
+  send_text [
+    name = "Random_True_False"
+    state = "WAITING"
+    returned = "Any"
+    fillcolor=WHITE
+    style=filled
+    shape=ellipse
+  ]
+  send_email [
+    name = "Always_False"
+    state = "WAITING"
+    returned = "Any"
+    fillcolor=WHITE
+    style=filled
+    shape=ellipse
+  ]
+  end [
+    name = "Say"
+    state = "WAITING"
+    returned = "Any"
+    fillcolor=WHITE
+    style=filled
+    shape=ellipse
+  ]
+  error [
+    name = "Say"
+    state = "WAITING"
+    returned = "Any"
+    fillcolor=WHITE
+    style=filled
+    shape=ellipse
+  ]
+
+  urgent -> send_email [label="False"]
+  urgent -> send_text [label="True"]
+  send_text -> end [label="True"]
+  send_email -> end [label="True"]
+  send_text -> error [label="False"]
+  send_email -> error [label="False"]
+}
 
     `
 

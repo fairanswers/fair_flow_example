@@ -70,6 +70,16 @@ def health_check():
 # def flow():
 #     return request.method+" OK\n\n"
 
+@app.route("/run", methods = ['POST'])
+def run():
+    file = request.data
+    ps = fair_flow.Process.parse(file)
+    runner = fair_flow.FlexibleJobRunner()
+    filename="JOB-"+time.strftime("%Y-%m-%d_%H_%M_%S")
+    job = ps.createJob(filename)
+    runner.execute_job(job)
+    return job.to_dot()
+
 @app.route("/step", methods = ['POST'])
 def step():
     file = request.data
