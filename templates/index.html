@@ -160,8 +160,8 @@
         <b>Fair_Flow</b> &mdash; a simple workflow library.
 	<div><h3>Examples</h3>
 		<ul>
-			<div><a onclick="doExample(dg1)">Load Example 1</a></div>
-			<div><a onclick="doExample(dg2)">Two</a></div>
+			<div><a onclick="doExample(dg1)">Load Simple Example</a></div>
+			<div><a onclick="doExample(dg2)">Send an email or text?</a></div>
 			<div><a onclick="doExample(dg3)">Three</a></div>
       <div><a onclick="doRun()">Run</a></div>
       <div><a onclick="doStep()">Step</a></div>
@@ -403,45 +403,48 @@
 var dg1=`
 
 digraph one {
+  first [
+    name = "Always_True"
+  ]
+  second [
+    name = "Always_True"
+  ]
+  third [
+    name = "Always_True"
+  ]
+  fourth [
+    name = "Always_True"
+  ]
+
+  first  -> second
+  second -> third
+  third  -> fourth
+}
+
+`
+
+var dg2=`
+
+digraph one {
   urgent [
     name = "Always_True"
-    state = "WAITING"
-    returned = "Any"
-    fillcolor=WHITE
-    style=filled
-    shape=ellipse
+    label="Is this urgent?"
   ]
   send_text [
     name = "Random_True_False"
-    state = "WAITING"
-    returned = "Any"
-    fillcolor=WHITE
-    style=filled
-    shape=ellipse
+    label="Send a Text!"
   ]
   send_email [
     name = "Always_False"
-    state = "WAITING"
-    returned = "Any"
-    fillcolor=WHITE
-    style=filled
-    shape=ellipse
+    label="Send an Email!!"
   ]
   end [
     name = "Say"
-    state = "WAITING"
-    returned = "Any"
-    fillcolor=WHITE
-    style=filled
-    shape=ellipse
+    label="Done"
   ]
   error [
     name = "Say"
-    state = "WAITING"
-    returned = "Any"
-    fillcolor=WHITE
-    style=filled
-    shape=ellipse
+    label="ERROR"
   ]
 
   urgent -> send_email [label="False"]

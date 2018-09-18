@@ -87,7 +87,7 @@ def step():
     runner = fair_flow.FlexibleJobRunner()
     filename="JOB-"+time.strftime("%Y-%m-%d_%H_%M_%S")
     job = ps.createJob(filename)
-    runner.execute_job(job)
+    runner.execute_job(job, True)
     return job.to_dot()
 
 @app.route("/flow/<string:id>/", methods = ['GET', 'POST', 'DELETE'])
