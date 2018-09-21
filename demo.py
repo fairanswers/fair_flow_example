@@ -1,4 +1,4 @@
-import fair_flow
+import fair_flow, fair_flow_example
 from flask import Flask, request, send_from_directory, render_template
 import os, time
 app = Flask(__name__)
