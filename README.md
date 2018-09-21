@@ -98,14 +98,14 @@ Behind the scenes, chores are saved in DOT file format like this.
 <pre>
 digraph chores
 {
-    feed_dog [name="fair_bpm_example.FeedDog"]
-    needs_water [name="fair_bpm_example.CheckWater"]
-    water_dog [name="fair_bpm_example.WaterDog"]
+    feed_dog [name="fair_flow_example.FeedDog"]
+    needs_water [name="fair_flow_example.CheckWater"]
+    water_dog [name="fair_flow_example.WaterDog"]
     is_first_of_month [name=Command command="me.returned=True"]
     end [name=Say]
-    medicate_dog [name="fair_bpm_example.MedicateDog"]
+    medicate_dog [name="fair_flow_example.MedicateDog"]
     pills_left [name=Command command="me.returned=False"]
-    order_medication [name="fair_bpm_example.OrderMedication"]
+    order_medication [name="fair_flow_example.OrderMedication"]
 
     feed_dog -> needs_water [label=Any]
     needs_water -> water_dog [label=True]
@@ -118,7 +118,6 @@ digraph chores
     pills_left -> order_medication [label=False]
     order_medication -> end [label=Any]
 }
-
 </pre>
 
 You can see we start with a
