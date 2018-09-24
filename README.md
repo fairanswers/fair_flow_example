@@ -2,18 +2,17 @@
 A Simple Workflow Library
 
 ## Overview
-fair_flow is a workflow library. With it you can describe a process and have the computer follow all the steps in that process.  It's like a programming language for non-programmers. Business users or other subject matter experts can change how it works without waiting for a developer.
+fair_flow is a simple implementation of a work flow system. A work flow describes a series of activities that need to be done.  
+
+This is handy when you have a complex system but you want non-programmers to make changes. Instead of writing up requirements and waiting for the rest of the process to be done by programmers, non-programmers can use fair_flow to modify a process, then the library takes care of executing that process.
 
 The basic building block in fair_flow is the **activity**.  An activity is a reusable piece of code that completes one step.  For instance, an activity might get data from a service, calculate a value, or send an email.  An activity can be strung together with other activities to describe a process. Activities can be used more than once in the same process or in different processes.
 
 A **process** is a group of activities.  The process describes what activities will be executed and how they relate.  Think of a process as a recipe.
 
-To run a process, you first create a **job**. A job is a copy of the process that _remembers which values have been set and steps have been done_.
-If a process is a recipe for a sandwich, a job is a copy of the recipe PLUS what happened when you did each step.  If someone ordered 2 sandwiches at the same time, we'd want to make sure we did all the steps for each sandwich.  Jobs keep up with which activities have run, and which ones still need to run.
+To run a process, you first create a **job**. A job is a copy of the process that _remembers its state_. The state is made up of which activities have been done, and what variables have been set.
 
-Processes are started by a **trigger**.  A trigger is like when someone orders a sandwich.  Triggers can be if an alarm gets raised, an email comes in, or if a timer expires.  
-
-A trigger matches a process, which creates a job with all the activities.  There's more to it, but let's see how it works together.
+If a process is a recipe for a sandwich, a job is a copy of the recipe PLUS the state of the sandwich.  If someone ordered 2 sandwiches at the same time, we'd want to keep track of each sandwich separately to make sure every step got done.  Jobs keep up with which activities have run and which variables have been set.
 
 # Example
 
@@ -45,51 +44,16 @@ If you break this into individual activities, it might look like this:
 
 4.    Finish
 
-The trigger for this example would be a timer, which would go off every morning.  That trigger could include information we need to complete the job like what day of the month it is.
+There are several steps to implementing this work flow.  
+1. Conceptually - Each activity needs to be stubbed out and placed in a process so you can see what the process will look like.  
+2. Programmatically - Each activity needs to be written. These will be classes in python that inherit from Activity.  
 
-### Step 1:  Programmatically
-Programmatically, you can see there are two types of tasks: custom and standard.  Our custom commands interact with the smart home: feed dog,
-water dog, medicate dog, order medication.
 
-Custom steps are written in Python, and extend the Activity class.  This gives them a method called 'execute' where the custom code can go.  It's also the key to testing activities with different inputs and outputs before they go into production.
-
-Custom commands look like this:
-
-[This code in in example/fair_bpm_example.py]
-
-<pre>
-import fair_bpm
-
-class FeedDog(fair_bpm.Activity):
-    def execute(self, context=None):
-        print("Starting feed dog")
-        # Put feed dog code here
-
-class WaterDog(fair_bpm.Activity):
-    def execute(self, context=None):
-        print("Starting water dog")
-        # Put water dog code here
-
-class MedicateDog(fair_bpm.Activity):
-    def execute(self, context=None):
-        print("Starting medicate dog")
-        # Put medicate dog code here
-        # Set Pills Left in context
-
-class OrderMedication(fair_bpm.Activity):
-    def execute(self, context=None):
-        print("Starting order_medication dog")
-        # Put order_medication dog code here
-</pre>
-
-For the other tasks, we can use the built-in activities. Making simple decisions, comparing strings, and string manipulation can be handled by the Command activity.  This activity runs a snippet of custom python code that you describe in your process.  **Note:**  Running custom code that your users type in is a bigger topic that we won't get into here.
-
-### Graphically
-This flow would graphically look like this
+### Conceptually
+This flow could graphically look like this
 
 ![Example Chores Process](ExampleChoresProcess.PNG)
 
-### Conceptually
 We start at the top and see the first activity is to feed the dog.  Then the arrow goes to "need_water" activity, where your code would interact with the smart home to find the water level in the dog's bowl.  There are two arrows that come from that, labeled True and False.  If the needs_water activity decides that dog does need water, it follows the True path and add some water to her bowl.  If not, it skips that step and goes on.
 
 Each activity can have a "returned" vale that can be either True, False, or Any. For an activity, The job will only follow the True or False path if the returned value matches for that activity.  If the label leading from that activity is Any, then the job will always execute that step regardless of the returned value.
@@ -124,7 +88,7 @@ You can see we start with a
 <pre>
   digraph chores
 </pre>
- which in DOT language means "directed graph", or nodes that are connected by arrows.  Then in {} we have two types of objects: a set of nodes and a set of edges.  The nodes look like
+ which in DOT language means "directed graph", or nodes that are connected by edges.  Then in {} we have two types of objects: a set of nodes and a set of edges.  The nodes look like
 <pre>
   node_name [ key=value ]
 </pre>
@@ -137,6 +101,43 @@ The next session is a list of edges between the nodes like this:
 </pre>
 
 Here the idea is the same as nodes, but the only key is 'label' and the value is the condition that we require from the activity's returned value.
+
+### Step 3:  Programmatically
+Programmatically, you can see there are two types of tasks: custom and standard.  Our custom commands interact with the smart home: feed dog,
+water dog, medicate dog, order medication.
+
+Custom steps are written in Python, and extend the Activity class.  This gives them a method called 'execute' where the custom code can go.  It's also the key to testing activities with different inputs and outputs before they go into production.
+
+Custom commands look like this:
+
+[This code in in example/fair_bpm_example.py]
+
+<pre>
+import fair_bpm
+
+class FeedDog(fair_bpm.Activity):
+    def execute(self, context=None):
+        print("Starting feed dog")
+        # Put feed dog code here
+
+class WaterDog(fair_bpm.Activity):
+    def execute(self, context=None):
+        print("Starting water dog")
+        # Put water dog code here
+
+class MedicateDog(fair_bpm.Activity):
+    def execute(self, context=None):
+        print("Starting medicate dog")
+        # Put medicate dog code here
+        # Set Pills Left in context
+
+class OrderMedication(fair_bpm.Activity):
+    def execute(self, context=None):
+        print("Starting order_medication dog")
+        # Put order_medication dog code here
+</pre>
+
+For the other tasks, we can use the built-in activities. Making simple decisions, comparing strings, and string manipulation can be handled by the Command activity.  This activity runs a snippet of custom python code that you describe in your process.  **Note:**  Running custom code that your users type in is a security risk that we won't get into here.
 
 # Features:
 
@@ -155,27 +156,26 @@ For each activity there are a list of key/value pairs [inside brackets] that giv
 If you'll look at the is_first_of_month node, the name is Command, and it has a "command" key with a value of "me.returned=True".  This string is actually __python__ code that gets run for this activity.  This is dangerous in the hands of hackers so you'll need to be careful.
 
 # What's Missing?
-The big thing that users need (but the library doesn't) is a Graphical User Interface.  This is a graphical language, and it needs a reliable interface for the users to use.  Otherwise, they'll be POSTing strings to services, and we can do better than that.
+The big thing that users need (but the library doesn't) is a Graphical User Interface.  This is a graphical language, and it needs a reliable interface for the users to use.  Otherwise, they'll be POSTing dot strings to services, and we can do better than that.
 
 Luckily, Graphviz has been around for decades, so there are parsers for it in just about any language you'd want to use.
 
 In order to be a helpful tool for non-programmers, we'll need a snazzy front end that makes it easy to:
 *  Declare nodes and Edges (and their attributes)
 *  Use the RESTful interface to CRUD processes
+I took a first cut at a front-end and put it up at http://github.com/fairanswers/fair_flow_example . Download and run it, if you haven't already, and try it out.
 
 # Installation
 
-First, clone this repo.  You'll also need the excellent dot_tools dot parser
+First, clone this repo and run pip install -r requirements from the clone directory.  This will add libraries you'll need to get things started.  Then, run python demo.py for the demonstration.  Navigate to http://localhost:5000
 
-pip install git+https://github.com/timtadh/dot_tools.git
 
 # Getting Started
-There is a demo available in the FairBPM directory with the command
+From the web page you'll have examples to load into the left pane.  Click on one of those to see the dot file format in it's most simple form.  Then, select to either step through each step, or run them all at once.
 
-  python demo.py
+*Note:*  If you step through each step, they layout (left to right) may change, but the values do not.  Graphviz is just not very good at maintaining the same order every time it runs.
 
-This will open up the demo.dot file, print it, create a job, run it through a job runner, and print out the results.
+You can step through all the steps, or select Run at any time to complete the flow.
 
- Each node in this process randomly returns True or False.  Each time you run it, you'll see it runs a random path from beginning to end.
-
-If you copy the text from the word 'digraph' to the closing curly bracket, then paste it into the text area on the left at http://viz-js.com/, you'll see what the run of this job looks like.  Run it again and see that it does something different.
+# Doing more
+Now that you've got the basic idea, try implementing your own steps.  One step could read a file and save it in a variable.  The next step could capitalize all the letters.  The next step could write it to a different file.  Lay it out conceptually, stub out a process, then write all the classes to implement it.  
