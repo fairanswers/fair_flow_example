@@ -1,3 +1,3 @@
-fair_flow==0.0.4
+fair_flow
 flask
 git+git://github.com/timtadh/dot_tools#egg-info=dot_tools

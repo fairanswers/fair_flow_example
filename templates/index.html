@@ -151,6 +151,15 @@
       float: left;
     }
 
+    .split.split-even {
+      height: 100%;
+      width:50%;
+      float: left;
+    }
+    .split.split-left {
+      text-align: left;
+    }
+
     </style>
   </head>
   <body>
@@ -158,14 +167,37 @@
     <div id="app">
       <div id="header">
         <b>Fair_Flow</b> &mdash; a simple workflow library.
-	<div><h3>Examples</h3>
-		<ul>
-			<div><a onclick="doExample(dg1)">Load Simple Example</a></div>
-			<div><a onclick="doExample(dg2)">Send an email or text?</a></div>
-			<div><a onclick="doExample(dg3)">Three</a></div>
-      <div><a onclick="doRun()">Run</a></div>
-      <div><a onclick="doStep()">Step</a></div>
-		</ul>
+	<div>
+    <div class="split split-left">
+      <h3 style="text-align:center">Directions</h3>
+      <ol>
+        <li>To the left, select a flow.</li>
+        <li>Once it's loaded, select Step from the commands.  The flow will
+          find the starting point and execute that command (turns it green),
+          then it will decide
+          which steps are now ready to run (turns them yellow).</li>
+          <li>Select "step" again. One of the yellows will turn green, and the
+          next step to be executed will turn yellow. </li>
+      </ol>
+       This is the description of the steps that you
+      want to happen.
+      Once
+    </div>
+    <div class="split split-even">
+      <h3>Examples</h3>
+		  <ul>
+			  <li><a onclick="doExample(dg1)">Simple Example</a></li>
+			  <li><a onclick="doExample(dg2)">Send an email or text?</a></li>
+			  <li><a onclick="doExample(dg3)">Binary Tree</a></li>
+      </ul>
+      </div>
+      <div class="split split-even">
+        <h3>Commands</h3>
+      <ul>
+        <li><a onclick="doRun()">Run</a></li>
+        <li><a onclick="doStep()">Step</a></li>
+      </ul>
+    </div>
 	</div>
       </div>
       <div id="panes" class="split split-horizontal">
@@ -429,7 +461,7 @@ digraph one {
 
 var dg2=`
 
-digraph one {
+digraph two {
   urgent [
     name = "Always_True"
     label="Is this urgent?"
@@ -458,9 +490,42 @@ digraph one {
   send_text -> error [label="False"]
   send_email -> error [label="False"]
 }
+`
+var dg3=`
 
-    `
+digraph three {
+  node1 [ name = "Random_True_False"  ]
+  node2_1 [ name = "Random_True_False"  ]
+  node2_2[ name = "Random_True_False"  ]
+  node3_1 [ name = "Random_True_False"  ]
+  node3_2 [ name = "Random_True_False"  ]
+  node4_1 [ name = "Random_True_False"  ]
+  node4_2 [ name = "Random_True_False"  ]
+  node5_1 [ name = "Random_True_False"  ]
+  node5_2 [ name = "Random_True_False"  ]
+  node6_1 [ name = "Random_True_False"  ]
+  node6_2 [ name = "Random_True_False"  ]
+  node7_1 [ name = "Random_True_False"  ]
+  node7_2 [ name = "Random_True_False"  ]
+  node8_1 [ name = "Random_True_False"  ]
+  node8_2 [ name = "Random_True_False"  ]
 
+  node1 -> node2_1 [label="True"]
+  node1 -> node2_2 [label="False"]
+  node2_1 -> node3_1 [label="True"]
+  node2_1 -> node3_2 [label="False"]
+  node2_2 -> node4_1 [label="True"]
+  node2_2 -> node4_2 [label="False"]
+  node3_1 -> node5_1 [label="True"]
+  node3_1 -> node5_2 [label="False"]
+  node3_2 -> node6_1 [label="True"]
+  node3_2 -> node6_2 [label="False"]
+  node4_1 -> node7_1 [label="True"]
+  node4_1 -> node7_2 [label="False"]
+  node4_2 -> node8_1 [label="True"]
+  node4_2 -> node8_2 [label="False"]
+}
+`
     </script>
 
   </body>
